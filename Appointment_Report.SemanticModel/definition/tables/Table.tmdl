@@ -1,0 +1,25 @@
+table Table
+	lineageTag: bc64adce-1d87-4b9b-9ae3-984f189560f2
+
+	column Time
+		formatString: HH
+		lineageTag: d82d5a2f-fd47-4469-93d8-e2871dee7906
+		summarizeBy: none
+		isNameInferred
+		sourceColumn: [Time]
+
+		variation Variation
+			isDefault
+			relationship: 8da4376f-14c7-4fee-ae59-66c8ca919027
+			defaultHierarchy: LocalDateTable_67c1e33c-41aa-414b-acd6-e1f51af2fad5.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	partition Table = calculated
+		mode: import
+		source = SELECTCOLUMNS( GENERATESERIES(0,23,1), "Time", CONVERT([Value] & ":00:00",DATETIME))
+
+	annotation PBI_Id = 2a2d318164544ef58663a88c13fe769e
+

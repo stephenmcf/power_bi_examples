@@ -1,0 +1,145 @@
+table Mock_medical_data
+	lineageTag: 905b744e-a12a-4745-b281-bd592674c6d9
+
+	measure 'Total Appointments' = DISTINCTCOUNT(Mock_medical_data[id])
+		formatString: 0
+		lineageTag: f83a5455-41b8-4c26-8835-558953fd5692
+
+	measure 'Appointments With Perscription' = CALCULATE(DISTINCTCOUNT('Mock_medical_data'[id]),Mock_medical_data[perscription]="No Perscription") / [Total Appointments]
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: bf4457ac-937f-46ff-bd5e-2714f3e55095
+
+	column id
+		dataType: int64
+		formatString: 0
+		lineageTag: 0495a88d-eff5-4bc8-a1ae-0b9506902997
+		summarizeBy: sum
+		sourceColumn: id
+
+		annotation SummarizationSetBy = Automatic
+
+	column first_name
+		dataType: string
+		lineageTag: 18d5fd78-5c00-469e-99cc-9efe9036e5b5
+		summarizeBy: none
+		sourceColumn: first_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column last_name
+		dataType: string
+		lineageTag: 356e2d42-c4c7-407b-953d-f99615daaf82
+		summarizeBy: none
+		sourceColumn: last_name
+
+		annotation SummarizationSetBy = Automatic
+
+	column email
+		dataType: string
+		lineageTag: 73c1ed31-68c3-4f26-af36-330d77601146
+		summarizeBy: none
+		sourceColumn: email
+
+		annotation SummarizationSetBy = Automatic
+
+	column gender
+		dataType: string
+		lineageTag: d6db3aab-9749-4fba-b1bd-7a35b05c324d
+		summarizeBy: none
+		sourceColumn: gender
+
+		annotation SummarizationSetBy = Automatic
+
+	column perscription
+		dataType: string
+		lineageTag: 22f035fc-1f99-4bc1-87e5-f4a326264680
+		summarizeBy: none
+		sourceColumn: perscription
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hospital
+		dataType: string
+		lineageTag: 9c585c28-b9ef-45c0-8e8f-02eb8143d062
+		summarizeBy: none
+		sourceColumn: Hospital
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hospital_city
+		dataType: string
+		lineageTag: b33381e8-58ed-4e34-8e4d-74893249f765
+		summarizeBy: none
+		sourceColumn: Hospital_city
+
+		annotation SummarizationSetBy = Automatic
+
+	column Appointment_DT
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: fe5acd43-b5bb-4858-ae85-28108bd424a3
+		summarizeBy: none
+		sourceColumn: Appointment_DT
+
+		variation Variation
+			isDefault
+			relationship: fc3f9196-b6a6-405f-88eb-8913640d48b8
+			defaultHierarchy: LocalDateTable_90ec9fe6-c451-478c-9c2a-330f7d26f79e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+	column Patitent_No
+		dataType: int64
+		formatString: 0
+		lineageTag: d53dee0d-e730-4412-bca5-d9926aaa904e
+		summarizeBy: sum
+		sourceColumn: Patitent_No
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Appointment Hour'
+		dataType: dateTime
+		formatString: Long Time
+		lineageTag: 5aae676d-0846-4129-9457-20a0e895870d
+		summarizeBy: none
+		sourceColumn: Appointment Hour
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Time
+
+	column Appointment_Date
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 85a81af1-a106-46c6-aff2-17e523b65cca
+		summarizeBy: none
+		sourceColumn: Appointment_Date
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	partition Mock_medical_data = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\stephen\Downloads\Mock_medical_data.csv"),[Delimiter=",", Columns=10, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"id", Int64.Type}, {"first_name", type text}, {"last_name", type text}, {"email", type text}, {"gender", type text}, {"perscription", type text}, {"Hospital", type text}, {"Hospital_city", type text}, {"Appointment_DT", type datetime}, {"Patitent_No", Int64.Type}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Changed Type","","Unknown",Replacer.ReplaceValue,{"email"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","","No Perscription",Replacer.ReplaceValue,{"perscription"}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Replaced Value1", "Appointment_DT", "Appointment_DT - Copy"),
+				    #"Extracted Time" = Table.TransformColumns(#"Duplicated Column",{{"Appointment_DT - Copy", DateTime.Time, type time}}),
+				    #"Calculated Start of Hour" = Table.TransformColumns(#"Extracted Time",{{"Appointment_DT - Copy", Time.StartOfHour, type time}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Calculated Start of Hour",{{"Appointment_DT - Copy", "Appointment Hour"}}),
+				    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Appointment_DT", Order.Descending}}),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Sorted Rows", "Appointment_DT", "Appointment_DT - Copy"),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Duplicated Column1",{{"Appointment_DT - Copy", "Appointment_Date"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns1",{{"Appointment_Date", type date}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,50 @@
+table 'Pie Chart Slicer'
+	lineageTag: fb8be23d-c287-4700-ac1e-dbcd3f0b9e40
+
+	column 'Pie Chart Slicer'
+		lineageTag: d59938f3-962a-4897-a245-10a78173ab19
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Pie Chart Slicer Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Pie Chart Slicer Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Pie Chart Slicer Fields'
+		isHidden
+		lineageTag: e770fc24-4d42-416b-8da0-7aa561643da3
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Pie Chart Slicer Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Pie Chart Slicer Order'
+		isHidden
+		formatString: 0
+		lineageTag: 2b6386e3-e5db-4c8b-9e21-243047414e02
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Pie Chart Slicer' = calculated
+		mode: import
+		source =
+				{
+				    ("City", NAMEOF('Mock_medical_data'[Hospital_city]), 0),
+				    ("Hospital", NAMEOF('Mock_medical_data'[Hospital]), 1),
+				    ("Gender", NAMEOF('Mock_medical_data'[gender]), 2),
+				    ("Perscription", NAMEOF('Mock_medical_data'[perscription]), 3)
+				}
+
+	annotation PBI_Id = 64fa185537694ba19fc36af7a431f80f
+

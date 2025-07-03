@@ -1,0 +1,50 @@
+table 'Date Slicer'
+	lineageTag: f67e5a7f-d80e-463f-9781-5fd37cb0ce91
+
+	column 'Date Slicer'
+		lineageTag: 9f19b761-a8c4-4bd4-88b4-49fe5ba76439
+		summarizeBy: none
+		sourceColumn: [Value1]
+		sortByColumn: 'Date Slicer Order'
+
+		relatedColumnDetails
+			groupByColumn: 'Date Slicer Fields'
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Slicer Fields'
+		isHidden
+		lineageTag: 113de2ec-b4c7-437e-b8d8-09d7c4df5e6d
+		summarizeBy: none
+		sourceColumn: [Value2]
+		sortByColumn: 'Date Slicer Order'
+
+		extendedProperty ParameterMetadata =
+				{
+				  "version": 3,
+				  "kind": 2
+				}
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Date Slicer Order'
+		isHidden
+		formatString: 0
+		lineageTag: 8307cfab-fdb5-4b8d-abd1-80ff2900c25e
+		summarizeBy: sum
+		sourceColumn: [Value3]
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Date Slicer' = calculated
+		mode: import
+		source =
+				{
+				    ("Yearly", NAMEOF('DateTable'[Year]), 0),
+				    ("Monthly", NAMEOF('DateTable'[Month Date]), 1),
+				    ("Weekly", NAMEOF('DateTable'[Week Date]), 2),
+				    ("Daily", NAMEOF('DateTable'[Date]), 3)
+				}
+
+	annotation PBI_Id = fea2f91ffb35413990fd6b9e5b47e67c
+

@@ -1,0 +1,38 @@
+relationship fc3f9196-b6a6-405f-88eb-8913640d48b8
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Mock_medical_data.Appointment_DT
+	toColumn: LocalDateTable_90ec9fe6-c451-478c-9c2a-330f7d26f79e.Date
+
+relationship c579ed69-8543-4b9c-9464-50f875773f31
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.Date
+	toColumn: LocalDateTable_296954f1-b477-4cb4-9ae7-530473f49ce1.Date
+
+relationship b8f715a5-e6c5-448d-810c-7f41805a47b5
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.'Year Date'
+	toColumn: LocalDateTable_be1bd8a1-e2aa-4de4-a9b4-489519aacbfa.Date
+
+relationship 18ca3670-8178-43bd-ac62-7d19905c2655
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.'Month Date'
+	toColumn: LocalDateTable_b42edd84-0001-43fe-a60d-4fe6a514fa2e.Date
+
+relationship 6094038b-d814-48f4-88b1-b045ea21ee95
+	joinOnDateBehavior: datePartOnly
+	fromColumn: DateTable.'Week Date'
+	toColumn: LocalDateTable_f4b8c1c7-4554-409c-a89a-391096dcc1b2.Date
+
+relationship 8da4376f-14c7-4fee-ae59-66c8ca919027
+	joinOnDateBehavior: datePartOnly
+	fromColumn: Table.Time
+	toColumn: LocalDateTable_67c1e33c-41aa-414b-acd6-e1f51af2fad5.Date
+
+relationship af6c1614-5f16-4623-5797-f926fee4a899
+	fromColumn: Mock_medical_data.'Appointment Hour'
+	toColumn: Table.Time
+
+relationship 001ee817-b6c1-21dc-c4b8-736b1a822778
+	fromColumn: Mock_medical_data.Appointment_Date
+	toColumn: DateTable.Date
+

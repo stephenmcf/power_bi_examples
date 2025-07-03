@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Appointment_Report"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "eca797b0-a7e0-470b-8a1b-a8c9170a7306"
+  }
+}

@@ -1,0 +1,134 @@
+table DateTable
+	lineageTag: 800d0666-d0ed-4ff9-964f-204a517b626a
+
+	column Date
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 8463c1d6-9408-45e9-8b6e-3bd196da6fa1
+		summarizeBy: none
+		sourceColumn: Date
+
+		variation Variation
+			isDefault
+			relationship: c579ed69-8543-4b9c-9464-50f875773f31
+			defaultHierarchy: LocalDateTable_296954f1-b477-4cb4-9ae7-530473f49ce1.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Year Date'
+		dataType: dateTime
+		formatString: yyyy
+		lineageTag: ef256260-82c1-4907-9e79-2c220e6afe33
+		summarizeBy: none
+		sourceColumn: Year Date
+
+		variation Variation
+			isDefault
+			relationship: b8f715a5-e6c5-448d-810c-7f41805a47b5
+			defaultHierarchy: LocalDateTable_be1bd8a1-e2aa-4de4-a9b4-489519aacbfa.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isDateTimeCustom":true}
+
+	column 'Month Date'
+		dataType: dateTime
+		formatString: Mmm/YY
+		lineageTag: f717ae35-5f4a-4362-ab1e-2fd614a52eca
+		summarizeBy: none
+		sourceColumn: Month Date
+
+		variation Variation
+			isDefault
+			relationship: 18ca3670-8178-43bd-ac62-7d19905c2655
+			defaultHierarchy: LocalDateTable_b42edd84-0001-43fe-a60d-4fe6a514fa2e.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column 'Week Date'
+		dataType: dateTime
+		formatString: Short Date
+		lineageTag: 8b931e13-6783-4851-a390-9f88579ed654
+		summarizeBy: none
+		sourceColumn: Week Date
+
+		variation Variation
+			isDefault
+			relationship: 6094038b-d814-48f4-88b1-b045ea21ee95
+			defaultHierarchy: LocalDateTable_f4b8c1c7-4554-409c-a89a-391096dcc1b2.'Date Hierarchy'
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column Year
+		dataType: int64
+		formatString: 0
+		lineageTag: 38cb0a95-7691-4bec-967a-f95acbbfe5ba
+		summarizeBy: sum
+		sourceColumn: Year
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayName
+		dataType: string
+		lineageTag: 32f7da84-d936-48e3-9e87-a764a6456372
+		summarizeBy: none
+		sourceColumn: DayName
+		sortByColumn: DayNameSort
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column DayNameSort
+		dataType: int64
+		formatString: 0
+		lineageTag: ae26ba43-9393-44ec-b719-f6a2b3de9a20
+		summarizeBy: sum
+		sourceColumn: DayNameSort
+
+		annotation SummarizationSetBy = Automatic
+
+	partition DateTable = m
+		mode: import
+		source =
+				let
+				    Source = List.Dates(#date(2024,07,03), Duration.TotalDays(#date(2025,07,02) -#date(2024,07,03))+1, #duration(1,0,0,0) ),
+				    #"Converted to Table" = Table.FromList(Source, Splitter.SplitByNothing(), null, null, ExtraValues.Error),
+				    #"Renamed Columns" = Table.RenameColumns(#"Converted to Table",{{"Column1", "Date"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Date", type date}}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Changed Type", "Date", "Date - Copy"),
+				    #"Calculated Start of Year" = Table.TransformColumns(#"Duplicated Column",{{"Date - Copy", Date.StartOfYear, type date}}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Calculated Start of Year",{{"Date - Copy", "Year Date"}}),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Renamed Columns1", "Date", "Date - Copy"),
+				    #"Calculated Start of Month" = Table.TransformColumns(#"Duplicated Column1",{{"Date - Copy", Date.StartOfMonth, type date}}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Calculated Start of Month",{{"Date - Copy", "Month Date"}}),
+				    #"Duplicated Column2" = Table.DuplicateColumn(#"Renamed Columns2", "Date", "Date - Copy"),
+				    #"Calculated Start of Week" = Table.TransformColumns(#"Duplicated Column2",{{"Date - Copy", Date.StartOfWeek, type date}}),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Calculated Start of Week",{{"Date - Copy", "Week Date"}}),
+				    #"Duplicated Column3" = Table.DuplicateColumn(#"Renamed Columns3", "Date", "Date - Copy"),
+				    #"Extracted Year" = Table.TransformColumns(#"Duplicated Column3",{{"Date - Copy", Date.Year, Int64.Type}}),
+				    #"Renamed Columns4" = Table.RenameColumns(#"Extracted Year",{{"Date - Copy", "Year"}}),
+				    #"Duplicated Column4" = Table.DuplicateColumn(#"Renamed Columns4", "Date", "Date - Copy"),
+				    #"Extracted Day Name" = Table.TransformColumns(#"Duplicated Column4", {{"Date - Copy", each Date.DayOfWeekName(_), type text}}),
+				    #"Duplicated Column5" = Table.DuplicateColumn(#"Extracted Day Name", "Date", "Date - Copy.1"),
+				    #"Renamed Columns5" = Table.RenameColumns(#"Duplicated Column5",{{"Date - Copy", "DayName"}}),
+				    #"Calculated Day of Week" = Table.TransformColumns(#"Renamed Columns5",{{"Date - Copy.1", Date.DayOfWeek, Int64.Type}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Calculated Day of Week",{{"Date - Copy.1", Int64.Type}}),
+				    #"Renamed Columns6" = Table.RenameColumns(#"Changed Type1",{{"Date - Copy.1", "DayNameSort"}})
+				in
+				    #"Renamed Columns6"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
