@@ -1,0 +1,31 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation PBI_QueryOrder = ["Mock_medical_data","DateTable"]
+
+annotation __PBI_TimeIntelligenceEnabled = 1
+
+annotation PBIDesktopVersion = 2.140.1577.0 (25.02)+00af0910c5ca19a229c472b0dfc17a2c488f6b0a
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table Mock_medical_data
+ref table DateTableTemplate_c2541f9e-9fb3-48df-a3b0-060b1c3fcd39
+ref table LocalDateTable_90ec9fe6-c451-478c-9c2a-330f7d26f79e
+ref table DateTable
+ref table LocalDateTable_296954f1-b477-4cb4-9ae7-530473f49ce1
+ref table LocalDateTable_be1bd8a1-e2aa-4de4-a9b4-489519aacbfa
+ref table LocalDateTable_b42edd84-0001-43fe-a60d-4fe6a514fa2e
+ref table LocalDateTable_f4b8c1c7-4554-409c-a89a-391096dcc1b2
+ref table Table
+ref table LocalDateTable_67c1e33c-41aa-414b-acd6-e1f51af2fad5
+ref table 'Date Slicer'
+ref table 'Pie Chart Slicer'
+
+ref cultureInfo en-US
+
