@@ -1,2 +1,2 @@
-# power_bi_examples
-A Collection of Power BI reports and dashboards i have created
+# Power BI Examples
+A Collection of Power BI reports and dashboards i have created using mock data.
